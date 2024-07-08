@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_internals/models/meal.dart';
 import 'package:flutter_internals/widgets/meal_item_trait.dart';
+import 'package:flutter_internals/widgets/meal_recipe.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
@@ -18,6 +19,18 @@ class MealItem extends StatelessWidget {
         meal.affordability.name.substring(1);
   }
 
+  void _selectMeal(BuildContext context) {
+    showModalBottomSheet(
+        useSafeArea: true,
+        context: context,
+        isScrollControlled: true,
+        builder: (ctx) {
+          return MealRecipe(
+            meal: meal,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -26,7 +39,9 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          _selectMeal(context);
+        },
         child: Stack(
           children: [
             FadeInImage(
@@ -65,11 +80,11 @@ class MealItem extends StatelessWidget {
                         MealItemTrait(
                             icon: Icons.schedule,
                             label: '${meal.duration} min'),
-                        SizedBox(
+                        const SizedBox(
                           width: 12,
                         ),
                         MealItemTrait(icon: Icons.work, label: complexityText),
-                        SizedBox(
+                        const SizedBox(
                           width: 12,
                         ),
                         MealItemTrait(

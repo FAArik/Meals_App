@@ -3,9 +3,9 @@ import 'package:flutter_internals/models/meal.dart';
 import 'package:flutter_internals/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({super.key, required this.meals, required this.title});
+  const MealsScreen({super.key, required this.meals, this.title});
 
-  final String title;
+  final String? title;
   final List<Meal> meals;
 
   @override
@@ -16,7 +16,6 @@ class MealsScreen extends StatelessWidget {
         meal: meals[index],
       ),
     );
-
     if (meals.isEmpty) {
       content = Center(
         child: Column(
@@ -39,11 +38,15 @@ class MealsScreen extends StatelessWidget {
         ),
       );
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: content,
-    );
+
+    if (title == null)
+      return content;
+    else
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(title!),
+        ),
+        body: content,
+      );
   }
 }
