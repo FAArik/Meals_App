@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_internals/models/meal.dart';
 import 'package:flutter_internals/widgets/meal_item_trait.dart';
-import 'package:flutter_internals/widgets/meal_recipe.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({super.key, required this.meal});
+  const MealItem({super.key, required this.meal, required this.onSelectMeal});
 
   final Meal meal;
+  final void Function(BuildContext context, Meal meal) onSelectMeal;
 
   String get complexityText {
     return meal.complexity.name[0].toUpperCase() +
@@ -19,18 +19,6 @@ class MealItem extends StatelessWidget {
         meal.affordability.name.substring(1);
   }
 
-  void _selectMeal(BuildContext context) {
-    showModalBottomSheet(
-        useSafeArea: true,
-        context: context,
-        isScrollControlled: true,
-        builder: (ctx) {
-          return MealRecipe(
-            meal: meal,
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -40,7 +28,7 @@ class MealItem extends StatelessWidget {
       elevation: 2,
       child: InkWell(
         onTap: () {
-          _selectMeal(context);
+          onSelectMeal(context, meal);
         },
         child: Stack(
           children: [

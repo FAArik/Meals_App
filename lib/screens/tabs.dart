@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_internals/models/meal.dart';
 import 'package:flutter_internals/screens/categories.dart';
 import 'package:flutter_internals/screens/meals.dart';
+import 'package:flutter_internals/widgets/main_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -14,12 +15,37 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   final List<Meal> _favorites = [];
 
-  _toggleMealFavoriteStatus(Meal meal) {
+  void _setScreen(String identifier) {
+    if (identifier == "filters") {
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showInfoMessage(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _toggleMealFavoriteStatus(Meal meal) {
+    setState(() {
+      updateFavorites(meal);
+    });
+  }
+
+  void updateFavorites(Meal meal) {
     final isExisting = _favorites.contains(meal);
-    if (isExisting)
+    if (isExisting) {
       _favorites.remove(meal);
-    else
+      _showInfoMessage("Removed from Favorites!");
+    } else {
       _favorites.add(meal);
+      _showInfoMessage("Marked as Favorite!");
+    }
   }
 
   int _selectedPageIndex = 0;
@@ -31,15 +57,23 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activepage = const CategoriesScreen();
+    Widget activepage = CategoriesScreen(
+      onToggleFavorite: _toggleMealFavoriteStatus,
+    );
     var activePageTitle = "Categories";
     if (_selectedPageIndex == 1) {
-      activepage = const MealsScreen(meals: []);
+      activepage = MealsScreen(
+        meals: _favorites,
+        onToggleFavorite: _toggleMealFavoriteStatus,
+      );
       activePageTitle = "Your Favorites";
     }
     return Scaffold(
       appBar: AppBar(
         title: Text(activePageTitle),
+      ),
+      drawer: MainDrawer(
+        onSelectScreen: _setScreen,
       ),
       body: activepage,
       bottomNavigationBar: BottomNavigationBar(

@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_internals/models/meal.dart';
 import 'package:flutter_internals/widgets/meal_item.dart';
+import 'package:flutter_internals/widgets/meal_recipe.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({super.key, required this.meals, this.title});
+  const MealsScreen(
+      {super.key,
+      required this.meals,
+      this.title,
+      required this.onToggleFavorite});
 
   final String? title;
   final List<Meal> meals;
+  final void Function(Meal meal) onToggleFavorite;
+
+  void _selectMeal(BuildContext context, Meal meal) {
+    showModalBottomSheet(
+        useSafeArea: true,
+        context: context,
+        isScrollControlled: true,
+        builder: (ctx) {
+          return MealRecipe(
+            meal: meal,
+            onToggleFavorite: onToggleFavorite,
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +33,7 @@ class MealsScreen extends StatelessWidget {
       itemCount: meals.length,
       itemBuilder: (ctx, index) => MealItem(
         meal: meals[index],
+        onSelectMeal: _selectMeal,
       ),
     );
     if (meals.isEmpty) {
