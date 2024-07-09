@@ -4,15 +4,14 @@ import 'package:flutter_internals/widgets/meal_item.dart';
 import 'package:flutter_internals/widgets/meal_recipe.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen(
-      {super.key,
-      required this.meals,
-      this.title,
-      required this.onToggleFavorite});
+  const MealsScreen({
+    super.key,
+    required this.meals,
+    this.title,
+  });
 
   final String? title;
   final List<Meal> meals;
-  final void Function(Meal meal) onToggleFavorite;
 
   void _selectMeal(BuildContext context, Meal meal) {
     showModalBottomSheet(
@@ -22,7 +21,6 @@ class MealsScreen extends StatelessWidget {
         builder: (ctx) {
           return MealRecipe(
             meal: meal,
-            onToggleFavorite: onToggleFavorite,
           );
         });
   }
